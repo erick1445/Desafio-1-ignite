@@ -19,7 +19,7 @@ function checksExistsUserAccount(request, response, next) {
     return response.status(404).json({ error: "Username not found"})
   }
 
-  request.username = username;
+  request.username = user;
 
   return next();
 }
@@ -35,20 +35,20 @@ app.post('/users', (request, response) => {
      return response.status(400).json({ ERROR: "Username already exists" });
   }
 
-  const id = uuidv4()
-
-  users.push({
+  const user = {
     id: uuidv4(),
     name,
     username,
     todos: []
-  });
+  }
 
-  return response.status(201).send();
+  users.push(user);
+
+  return response.status(201).json(user);
 });
 
 app.get('/todos', checksExistsUserAccount, (request, response) => {
-  const { username } = request;
+  const {username} = request;
 
   return response.json(username.todos)
 });
