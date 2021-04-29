@@ -54,13 +54,13 @@ app.get('/todos', checksExistsUserAccount, (request, response) => {
 });
 
 app.post('/todos', checksExistsUserAccount, (request, response) => {
-  const {tittle, deadline} = request.body;
+  const {title, deadline} = request.body;
 
   const { username } = request;
 
   const taskList = {
     id: uuidv4(),
-    tittle,
+    title,
     done: false,
     deadline: new Date(deadline),
     created_at: new Date(),
@@ -68,11 +68,23 @@ app.post('/todos', checksExistsUserAccount, (request, response) => {
 
   username.todos.push(taskList);
 
-  return response.status(201).send();
+  return response.status(201).json(taskList);
 });
 
 app.put('/todos/:id', checksExistsUserAccount, (request, response) => {
-  // Complete aqui
+  const { username } = request;
+
+  const { title,deadline} = request.body;
+
+  const { id } = request.params;
+
+  const todo = username.todos.find(todos => todos.id === id);
+
+  todo.title = title;
+
+  todo.deadline = new Date(deadline);
+
+  return response.json(todo)
 });
 
 app.patch('/todos/:id/done', checksExistsUserAccount, (request, response) => {
